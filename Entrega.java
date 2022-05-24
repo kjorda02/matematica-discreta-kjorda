@@ -26,7 +26,7 @@ import java.util.Set;
  *
  * Podeu fer aquesta entrega en grups de com a màxim 3 persones, i necessitareu com a minim Java 8.
  * Per entregar, posau a continuació els vostres noms i entregau únicament aquest fitxer.
- * - Nom 1:
+ * - Nom 1: Krishna Jorda Jimenez
  * - Nom 2:
  * - Nom 3:
  *
@@ -58,15 +58,40 @@ class Entrega {
         BiPredicate<Integer, Integer> p,
         Predicate<Integer> q,
         Predicate<Integer> r) {
+        
+        for (int x : universe) { // ∀x
+            for (int y : universe) { // ∀y
+                boolean qYR = (q.test(x) && r.test(y)); // Q(x) ^ R(y)
+                if (p.test(x, y) && !qYR){ // P(x,y) ^ ¬(Q(x) ^ R(y)) (La implicacion es falsa)
+                    return false;
+                }
+            }
+        }
 
-      return false; // TO DO
+      return true; // TO DO
     }
 
     /*
      * És cert que ∃!x. ∀y. Q(y) -> P(x) ?
      */
     static boolean exercici2(int[] universe, Predicate<Integer> p, Predicate<Integer> q) {
-      return false; // TO DO
+        boolean verdadero = false;
+        
+        for (int x : universe) {
+            boolean paraTodoY = true;
+            for (int y : universe) {
+                if (q.test(y) && !p.test(x)) { // ¬(Q(y) -> P(x))
+                    paraTodoY = false;
+                }
+            }
+            if (verdadero && paraTodoY) {
+                return false; // Si ya habia un "x" valido y hay otro es false directamente
+            } else if (paraTodoY){
+                verdadero = true; // Si no habia ningun "x" previo este es el unico de momento
+            }
+        }
+        
+      return verdadero; // TO DO
     }
 
     /*
@@ -76,14 +101,62 @@ class Entrega {
      * que cada un d'ells està ordenat de menor a major.
      */
     static boolean exercici3(int[][] universe) {
-      return false; // TO DO
+        for (int[] x : universe){
+            boolean todoYSubconjuntoDeX = true;
+            for (int[] y : universe){
+                if (!esSubconjunto(y, x)){
+                    todoYSubconjuntoDeX = false;
+                }
+            }
+            if (todoYSubconjuntoDeX) {
+                return false;
+            }
+        }
+      return true; // TO DO
+    }
+    
+    static boolean esSubconjunto(int[] conjunto1, int[] conjunto2){
+        if (conjunto1.length > conjunto2.length) {
+            return false;
+        }
+        
+        int idxConjunto2 = 0; // Dado que estan ordenados
+        for (int i = 0; i < conjunto1.length; i++) {
+            boolean elementoEncontrado = false;
+            for ( ; (idxConjunto2 < conjunto2.length) && !elementoEncontrado; idxConjunto2++) {
+                if (conjunto1[i] == conjunto2[idxConjunto2]) {
+                    elementoEncontrado = true;
+                }
+            }
+            if (!elementoEncontrado){
+                return false;
+            }
+        }
+        return true;
     }
 
     /*
      * És cert que ∀x. ∃!y. x·y ≡ 1 (mod n) ?
      */
     static boolean exercici4(int[] universe, int n) {
-      return false; // TO DO
+        boolean resultado = true;
+        
+        for (int x : universe) {
+            boolean hayYValido = false;
+            for (int y : universe) {
+                if (((x*y)%n) == 1) {
+                    if (hayYValido){
+                        return false;
+                    } else {
+                        hayYValido = true;
+                    }
+                }
+            }
+            if (!hayYValido){
+                return false;
+            }
+        }
+      return true; // TO DO
     }
 
     /*
