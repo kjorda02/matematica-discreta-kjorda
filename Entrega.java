@@ -257,7 +257,22 @@ class Entrega {
      * tant `a` com cada un dels elements de `p` està ordenat de menor a major.
      */
     static boolean exercici1(int[] a, int[][] p) {
-      return false; // TO DO
+        for (int[] subConjunto : p) {
+            int idxA = 0;
+            for (int elemSubconjunto : subConjunto){ // Para cada elemento del subconjunto actual
+                boolean encontrado = false;
+                for ( ; (idxA < a.length) && !encontrado; idxA++){ // Buscarlo en a
+                    if (a[idxA] == elemSubconjunto){
+                        a[idxA] = Integer.MIN_VALUE; // Si lo encuentra marcado como usado
+                        encontrado = true;
+                    }
+                }
+                if (!encontrado){ // Si no ha encontrado un solo elemento de un solo subconjunto
+                    return false; // No es una particion
+                }
+            }
+        }
+      return true; // TO DO
     }
 
     /*
@@ -266,6 +281,58 @@ class Entrega {
      * Podeu soposar que `x` pertany a `a` i que `a` està ordenat de menor a major.
      */
     static boolean exercici2(int[] a, int[][] rel, int x) {
+        
+        // Reflexiva
+        for (int elem : a){
+            boolean reflexiva = false;
+            for (int[] elemRel : rel) {
+                if (elem == elemRel[0] && elem == elemRel[1]) {
+                    reflexiva = true;
+                }
+            }
+            if (reflexiva == false){ // Si hay un solo elemento que no se relaciona con si mismo no es un POSET
+                return false;
+            }
+        }
+        
+        // Antisimetrica
+        for (int[] elemRel : rel) { // Si "a" se relaciona con "b"
+            for (int i = 1; i < rel.length; i++) {
+                if (rel[i][0] == elemRel[1] && rel[i][1] == elemRel[0]) { // Y "b" se relaciona con "a"
+                    if (elemRel[0] != elemRel[1]){ // Y "a" ≠ "b"
+                        return false; // La relacion no es antisimetrica y por lo tanto no es de orden parcial
+                    }
+                }
+            }
+        }
+        
+        // Transitiva
+        for (int elem : a){ // Para cada elemento
+            boolean fin = false;
+            int elemActual = elem;
+            
+            while (fin == false) { // Seguir comprovando hasta llegar a un elemento que no se relacione con nadie
+                
+                for (int[] elemRel : rel){ // Busca un elemento con el que el elemento actual se relacione
+                    if (elemRel[0] == elemActual){
+                        elemActual = elemRel[1]; // Si lo encuentra, ese pasa a ser el elemento actual
+                    }
+                }
+                
+                boolean encontrado = false; // Buscara si el primer elemento se relaciona con el elemento actual
+                for (int[] elemRel : rel){
+                    if (elemRel[0] == elem && elemRel[1] == elemActual){
+                        encontrado = true;
+                    }
+                }
+                if (!encontrado){ // Si el primer elemento no se relaciona con el elemento actual que hemos encontrado
+                    return false; // Siguiendo una cadena de relaciones, no es transitiva y por lo tanto, tampoco un POSET
+                }
+                
+            }
+        }
+        
+        
       return false; // TO DO
     }
 
