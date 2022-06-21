@@ -368,6 +368,7 @@ class Entrega {
      * Aquí teniu alguns exemples i proves relacionades amb aquests exercicis (vegeu `main`)
      */
     static void tests() {
+        System.out.println("TESTS TEMA 2");
       // Exercici 1
       // `p` és una partició d'`a`?
 
@@ -384,7 +385,7 @@ class Entrega {
               new int[][] { {1, 2}, {5}, {1, 4} }
           )
       );
-
+        System.out.println("EJERCICIO 1 TEMA 2");
       // Exercici 2
       // és `rel` definida sobre `a` d'ordre parcial i `x` n'és el mínim?
 
@@ -422,7 +423,7 @@ class Entrega {
               2
           )
       );
-
+        System.out.println("EJERCICIO 2 TEMA 2");
       // Exercici 3
       // calcular l'antiimatge de `y`
 
