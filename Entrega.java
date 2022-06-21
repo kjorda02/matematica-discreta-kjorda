@@ -681,9 +681,73 @@ class Entrega {
      * Donada una matriu d'adjacencia `A` d'un graf no dirigit, digau si el graf es eulerià.
      */
     static boolean exercici2(int[][] A) {
-      return false; // TO DO
+      for (int i = 0; i < A.length; i++) {
+        int orden = 0;
+        for (int j = 0; j < A.length; j++) {
+          if (A[i][j] == 1) {
+            orden++;
+          }
+        }
+        if ((orden % 2) != 0) {
+          return false;
+        }
+      }
+      return esConexo(A); // TO DO
     }
 
+    static boolean esConexo(int[][] A) {
+      boolean[] hemosPasado = new boolean[A.length];
+      boolean[] accesible = new boolean[A.length];
+      accesible[0] = true;
+      hemosPasado[0] = true;
+      for (int i = 1; i < A.length; i++){
+        accesible[i] = false;
+        hemosPasado[i] = false;
+      }
+      
+      int nodoActual = 0;
+      int siguienteNodo = 0;
+      boolean seguir = true;
+      while (seguir) { // Recorrer los nodos
+        hemosPasado[nodoActual] = true;
+        for (int i = 0; i < A.length; i++) { // Buscar nodos conectados al nodo actual
+          if (A[nodoActual][i] == 1) { // Cuando encuentra uno
+            
+            if (!hemosPasado[i]) { // Candidato a siguienteNodo
+              if (nodoActual == siguienteNodo) { // Si aun no hemos encontrado ninguno
+                siguienteNodo = i; // Nos conformamos con este
+              } else { // Si ya teniamos un siguienteNodo
+                if (!accesible[i]) {
+                  siguienteNodo = i; // Solo lo cambiamos si este no era accesible hasta ahora
+                }
+              }
+            }
+            accesible[i] = true; // En cualquier caso todos los nodos conexos a este seran accesibles
+          }
+        }
+        
+        // Si no hemos encontrado un cadidato a siguienteNodo entre los conexos a nodoActual
+        for (int i = 0; (nodoActual == siguienteNodo) && (i < A.length); i++) {
+          if (accesible[i] == true && hemosPasado[i] == false) { // Buscar un nuevo nodo de comienzo
+            siguienteNodo = i;
+          }
+        }
+        // Si aun asi no encuantra ningun candidatos significa que ya hemos acabado
+        if (nodoActual == siguienteNodo) {
+          seguir = false;
+          for (int i = 0; i < A.length; i++) {
+            if (!accesible[i]) {
+              return false; // Si ya hemos pasado por todos los nodos accesibles pero quedan nodos
+              // que no son accesibles significa que el grafo no es conexo
+            }
+          }
+        }
+        nodoActual = siguienteNodo;
+      }
+      
+      return true;
+    }
+    
     /*
      * Donat `n` el número de fulles d'un arbre arrelat i `d` el nombre de fills dels nodes interiors i de l'arrel,
      * retornau el nombre total de vèrtexos de l'arbre
