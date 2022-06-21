@@ -308,26 +308,26 @@ class Entrega {
         
       // Transitiva
       for (int[] rel1 : rel) { // Para cada relacion a -> b (rel1)
-          for (int[] rel2 : rel) {
-            if (rel2[0] == rel1[1]) { // Para cada relacion b -> c (rel2)
-              boolean encontrada = false; 
-              for (int[] rel3 : rel){ // Buscar una relacion a -> c (rel3)
-                if ((rel3[0] == rel1[0]) && (rel3[1] == rel2[1])){ // Si encuentra una relacion a -> c
-                  encontrada = true;
-                }
-              }
-              if (!encontrada){
-                return false;
+        for (int[] rel2 : rel) {
+          if (rel2[0] == rel1[1]) { // Para cada relacion b -> c (rel2)
+            boolean encontrada = false;
+            for (int[] rel3 : rel) { // Buscar una relacion a -> c (rel3)
+              if ((rel3[0] == rel1[0]) && (rel3[1] == rel2[1])) { // Si encuentra una relacion a -> c
+                encontrada = true;
               }
             }
+            if (!encontrada) {
+              return false;
+            }
           }
+        }
       }
       
       // Minimo
       if (a[0] != x){
         return false;
       }
-        
+      
       return true; // TO DO
     }
 
@@ -337,7 +337,31 @@ class Entrega {
      * que `y` pertany a `codom` i que tant `dom` com `codom` també estàn ordenats de menor a major.
      */
     static int[] exercici3(int[] dom, int[] codom, Function<Integer, Integer> f, int y) {
-      return new int[]{}; // TO DO
+      int[] res = new int[codom.length];
+      int ind = 0;
+      for (int i = 0; i < dom.length && ind < res.length; i++) {
+        if (f.apply(dom[i]) == y) {
+          res[ind] = dom[i];
+          ind++;
+        }
+      }
+
+      if (esNulo(res)) {
+        res = new int[]{};
+      }
+      Arrays.sort(res);
+      return res; // TO DO
+    }
+    
+    static boolean esNulo(int[] ary) {
+      boolean res = true;
+      for (int i = 0; i < ary.length; i++) {
+        if (!(ary[i] == 0)) {
+          res = false;
+          break;
+        }
+      }
+      return res;
     }
 
     /*
@@ -356,7 +380,51 @@ class Entrega {
     static final int BIJECTIVE = INJECTIVE + SURJECTIVE;
 
     static int exercici4(int[] dom, int[] codom, Function<Integer, Integer> f) {
-      return -1; // TO DO
+      int res = NOTHING_SPECIAL;
+      int[] img = new int[codom.length];
+      int count = 0;
+      int max = 1;
+      int min = 1;
+
+      for (int i = 0; i < dom.length; i++) {
+        count = 0;
+        for (int j = 0; j < codom.length; j++) {
+          if (f.apply(dom[i]) == codom[j]) {
+            img[j]++;
+            count++;
+          }
+          if (count > 1) {
+            return NOTHING_SPECIAL;
+          }
+          if (j == codom.length - 1 && count == 0) {
+            return NOTHING_SPECIAL;
+          }
+        }
+      }
+
+      for (int i = 0; i < img.length; i++) {
+        if (img[i] > 1) {
+          max = img[i];
+        }
+        if (img[i] < 1) {
+          min = img[i];
+        }
+      }
+
+      if (dom.length < codom.length && min < 1 && max == 1) {
+        res = INJECTIVE;
+      }
+      if (dom.length > codom.length && min == 1 && max > 1) {
+        res = SURJECTIVE;
+      }
+      if (dom.length == codom.length && min == 1 && max == 1) {
+        res = BIJECTIVE;
+      }
+      if (min < 1 && max > 1) {
+        res = NOTHING_SPECIAL;
+      }
+
+      return res; // TO DO
     }
 
     /*
@@ -498,7 +566,13 @@ class Entrega {
      * Podeu suposar que `a` i `b` són positius.
      */
     static int exercici1(int a, int b) {
-      return -1; // TO DO
+      int aux;//Para no perder b
+      while (b != 0) {
+        aux = b;
+        b = a % b;
+        a = aux;
+      }
+      return a; // TO DO
     }
 
     /*
@@ -507,7 +581,17 @@ class Entrega {
      * Podeu suposar que `a`, `b` i `c` són positius.
      */
     static boolean exercici2(int a, int b, int c) {
-      return false; // TO DO
+      int aux;//Para no perder b
+      while (b != 0) {
+        aux = b;
+        b = a % b;
+        a = aux;
+      }
+      if (a % c == 0) {
+        return true;
+      }
+      
+      return false;
     }
 
     /*
@@ -516,7 +600,30 @@ class Entrega {
      * Retornau l'invers sempre entre 1 i `n-1`, en cas que no existeixi retornau -1
      */
     static int exercici3(int a, int n) {
-      return -1; // TO DO
+      int res = -1;
+      int naux = n;
+      int aaux = a;
+      int aux;//Para no perder b
+      while (naux != 0) {
+        aux = naux;
+        naux = aaux % naux;
+        aaux = aux;
+      }
+      if (aaux == 1) {
+        int x = 0;
+        int r;
+        boolean bucle = true;
+        while (bucle) {
+          r = (a * x) % n;
+          if (r == 1) {
+            bucle = false;
+          } else {
+            x++;
+          }
+        }
+        res = x;
+      }
+      return res; // TO DO
     }
 
     /*
@@ -555,7 +662,19 @@ class Entrega {
      * Donada una matriu d'adjacencia `A` d'un graf no dirigit, retornau l'ordre i la mida del graf.
      */
     static int[] exercici1(int[][] A) {
-      return new int[]{}; // TO DO
+      int[] res = new int[2];
+      res[0] = A.length;
+      for (int i = 0; i < A.length; i++) {
+        for (int j = 0; j < A[0].length; j++) {
+          if (A[i][j] == 1 || A[j][i] == 1) {
+            res[1]++;
+          }
+        }
+
+      }
+      res[1] = res[1] / 2;
+      System.out.println(res[0] + " " + res[1]);
+      return res; // TO DO
     }
 
     /*
@@ -578,6 +697,9 @@ class Entrega {
      * Donada una matriu d'adjacencia `A` d'un graf connex no dirigit, digau si el graf conté algún cicle.
      */
     static boolean exercici4(int[][] A) {
+      int dimV = A.length;
+      int dimH = A[0].length;
+      
       return false; // TO DO
     }
     /*
@@ -630,15 +752,19 @@ class Entrega {
    * Podeu aprofitar el mètode `assertThat` per comprovar fàcilment que un valor sigui `true`.
    */
   public static void main(String[] args) {
-    Tema1.tests();
-    Tema2.tests();
-    Tema3.tests();
+    //Tema1.tests();
+    //Tema2.tests();
+    //Tema3.tests();
     Tema4.tests();
   }
 
   static void assertThat(boolean b) {
-    if (!b)
-      throw new AssertionError();
+    if (!b) {
+            System.out.println("ta mal");
+            //throw new AssertionError();
+        } else {
+            System.out.println("ta bien");
+        }
   }
 }
 
