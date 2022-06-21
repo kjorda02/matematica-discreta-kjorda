@@ -59,14 +59,14 @@ class Entrega {
         Predicate<Integer> q,
         Predicate<Integer> r) {
         
-        for (int x : universe) { // ∀x
-            for (int y : universe) { // ∀y
-                boolean qYR = (q.test(x) && r.test(y)); // Q(x) ^ R(y)
-                if (p.test(x, y) && !qYR){ // P(x,y) ^ ¬(Q(x) ^ R(y)) (La implicacion es falsa)
-                    return false;
-                }
-            }
+      for (int x : universe) { // ∀x
+        for (int y : universe) { // ∀y
+          boolean qYR = (q.test(x) && r.test(y)); // Q(x) ^ R(y)
+          if (p.test(x, y) && !qYR) { // P(x,y) ^ ¬(Q(x) ^ R(y)) (La implicacion es falsa)
+            return false;
+          }
         }
+      }
 
       return true; // TO DO
     }
@@ -75,21 +75,21 @@ class Entrega {
      * És cert que ∃!x. ∀y. Q(y) -> P(x) ?
      */
     static boolean exercici2(int[] universe, Predicate<Integer> p, Predicate<Integer> q) {
-        boolean verdadero = false;
-        
-        for (int x : universe) {
-            boolean paraTodoY = true;
-            for (int y : universe) {
-                if (q.test(y) && !p.test(x)) { // ¬(Q(y) -> P(x))
-                    paraTodoY = false;
-                }
-            }
-            if (verdadero && paraTodoY) {
-                return false; // Si ya habia un "x" valido y hay otro es false directamente
-            } else if (paraTodoY){
-                verdadero = true; // Si no habia ningun "x" previo este es el unico de momento
-            }
+      boolean verdadero = false;
+
+      for (int x : universe) {
+        boolean paraTodoY = true;
+        for (int y : universe) {
+          if (q.test(y) && !p.test(x)) { // ¬(Q(y) -> P(x))
+            paraTodoY = false;
+          }
         }
+        if (verdadero && paraTodoY) {
+          return false; // Si ya habia un "x" valido y hay otro es false directamente
+        } else if (paraTodoY) {
+          verdadero = true; // Si no habia ningun "x" previo este es el unico de momento
+        }
+      }
         
       return verdadero; // TO DO
     }
@@ -101,61 +101,61 @@ class Entrega {
      * que cada un d'ells està ordenat de menor a major.
      */
     static boolean exercici3(int[][] universe) {
-        for (int[] x : universe){
-            boolean todoYSubconjuntoDeX = true;
-            for (int[] y : universe){
-                if (!esSubconjunto(y, x)){
-                    todoYSubconjuntoDeX = false;
-                }
-            }
-            if (todoYSubconjuntoDeX) {
-                return false;
-            }
+      for (int[] x : universe) {
+        boolean todoYSubconjuntoDeX = true;
+        for (int[] y : universe) {
+          if (!esSubconjunto(y, x)) {
+            todoYSubconjuntoDeX = false;
+          }
         }
+        if (todoYSubconjuntoDeX) {
+          return false;
+        }
+      }
       return true; // TO DO
     }
     
     static boolean esSubconjunto(int[] conjunto1, int[] conjunto2){
-        if (conjunto1.length > conjunto2.length) {
-            return false;
+      if (conjunto1.length > conjunto2.length) {
+        return false;
+      }
+
+      int idxConjunto2 = 0; // Dado que estan ordenados
+      for (int i = 0; i < conjunto1.length; i++) {
+        boolean elementoEncontrado = false;
+        for (; (idxConjunto2 < conjunto2.length) && !elementoEncontrado; idxConjunto2++) {
+          if (conjunto1[i] == conjunto2[idxConjunto2]) {
+            elementoEncontrado = true;
+          }
         }
-        
-        int idxConjunto2 = 0; // Dado que estan ordenados
-        for (int i = 0; i < conjunto1.length; i++) {
-            boolean elementoEncontrado = false;
-            for ( ; (idxConjunto2 < conjunto2.length) && !elementoEncontrado; idxConjunto2++) {
-                if (conjunto1[i] == conjunto2[idxConjunto2]) {
-                    elementoEncontrado = true;
-                }
-            }
-            if (!elementoEncontrado){
-                return false;
-            }
+        if (!elementoEncontrado) {
+          return false;
         }
-        return true;
+      }
+      return true;
     }
 
     /*
      * És cert que ∀x. ∃!y. x·y ≡ 1 (mod n) ?
      */
     static boolean exercici4(int[] universe, int n) {
-        boolean resultado = true;
-        
-        for (int x : universe) {
-            boolean hayYValido = false;
-            for (int y : universe) {
-                if (((x*y)%n) == 1) {
-                    if (hayYValido){
-                        return false;
-                    } else {
-                        hayYValido = true;
-                    }
-                }
+      boolean resultado = true;
+
+      for (int x : universe) {
+        boolean hayYValido = false;
+        for (int y : universe) {
+          if (((x * y) % n) == 1) {
+            if (hayYValido) {
+              return false;
+            } else {
+              hayYValido = true;
             }
-            if (!hayYValido){
-                return false;
-            }
+          }
         }
+        if (!hayYValido) {
+          return false;
+        }
+      }
       return true; // TO DO
     }
 
@@ -257,21 +257,21 @@ class Entrega {
      * tant `a` com cada un dels elements de `p` està ordenat de menor a major.
      */
     static boolean exercici1(int[] a, int[][] p) {
-        for (int[] subConjunto : p) {
-            int idxA = 0;
-            for (int elemSubconjunto : subConjunto){ // Para cada elemento del subconjunto actual
-                boolean encontrado = false;
-                for ( ; (idxA < a.length) && !encontrado; idxA++){ // Buscarlo en a
-                    if (a[idxA] == elemSubconjunto){
-                        a[idxA] = Integer.MIN_VALUE; // Si lo encuentra marcado como usado
-                        encontrado = true;
-                    }
-                }
-                if (!encontrado){ // Si no ha encontrado un solo elemento de un solo subconjunto
-                    return false; // No es una particion
-                }
+      for (int[] subConjunto : p) {
+        int idxA = 0;
+        for (int elemSubconjunto : subConjunto) { // Para cada elemento del subconjunto actual
+          boolean encontrado = false;
+          for (; (idxA < a.length) && !encontrado; idxA++) { // Buscarlo en a
+            if (a[idxA] == elemSubconjunto) {
+              a[idxA] = Integer.MIN_VALUE; // Si lo encuentra marcado como usado
+              encontrado = true;
             }
+          }
+          if (!encontrado) { // Si no ha encontrado un solo elemento de un solo subconjunto
+            return false; // No es una particion
+          }
         }
+      }
       return true; // TO DO
     }
 
@@ -282,58 +282,53 @@ class Entrega {
      */
     static boolean exercici2(int[] a, int[][] rel, int x) {
         
-        // Reflexiva
-        for (int elem : a){
-            boolean reflexiva = false;
-            for (int[] elemRel : rel) {
-                if (elem == elemRel[0] && elem == elemRel[1]) {
-                    reflexiva = true;
-                }
+      // Reflexiva
+      for (int elem : a) {
+        boolean reflexiva = false;
+        for (int[] elemRel : rel) {
+          if (elem == elemRel[0] && elem == elemRel[1]) {
+            reflexiva = true;
+          }
+        }
+        if (reflexiva == false) { // Si hay un solo elemento que no se relaciona con si mismo no es un POSET
+          return false;
+        }
+      }
+
+      // Antisimetrica
+      for (int[] elemRel : rel) { // Si "a" se relaciona con "b"
+        for (int i = 1; i < rel.length; i++) {
+          if (rel[i][0] == elemRel[1] && rel[i][1] == elemRel[0]) { // Y "b" se relaciona con "a"
+            if (elemRel[0] != elemRel[1]) { // Y "a" ≠ "b"
+              return false; // La relacion no es antisimetrica y por lo tanto no es de orden parcial
             }
-            if (reflexiva == false){ // Si hay un solo elemento que no se relaciona con si mismo no es un POSET
+          }
+        }
+      }
+        
+      // Transitiva
+      for (int[] rel1 : rel) { // Para cada relacion a -> b (rel1)
+          for (int[] rel2 : rel) {
+            if (rel2[0] == rel1[1]) { // Para cada relacion b -> c (rel2)
+              boolean encontrada = false; 
+              for (int[] rel3 : rel){ // Buscar una relacion a -> c (rel3)
+                if ((rel3[0] == rel1[0]) && (rel3[1] == rel2[1])){ // Si encuentra una relacion a -> c
+                  encontrada = true;
+                }
+              }
+              if (!encontrada){
                 return false;
+              }
             }
-        }
+          }
+      }
+      
+      // Minimo
+      if (a[0] != x){
+        return false;
+      }
         
-        // Antisimetrica
-        for (int[] elemRel : rel) { // Si "a" se relaciona con "b"
-            for (int i = 1; i < rel.length; i++) {
-                if (rel[i][0] == elemRel[1] && rel[i][1] == elemRel[0]) { // Y "b" se relaciona con "a"
-                    if (elemRel[0] != elemRel[1]){ // Y "a" ≠ "b"
-                        return false; // La relacion no es antisimetrica y por lo tanto no es de orden parcial
-                    }
-                }
-            }
-        }
-        
-        // Transitiva
-        for (int elem : a){ // Para cada elemento
-            boolean fin = false;
-            int elemActual = elem;
-            
-            while (fin == false) { // Seguir comprovando hasta llegar a un elemento que no se relacione con nadie
-                
-                for (int[] elemRel : rel){ // Busca un elemento con el que el elemento actual se relacione
-                    if (elemRel[0] == elemActual){
-                        elemActual = elemRel[1]; // Si lo encuentra, ese pasa a ser el elemento actual
-                    }
-                }
-                
-                boolean encontrado = false; // Buscara si el primer elemento se relaciona con el elemento actual
-                for (int[] elemRel : rel){
-                    if (elemRel[0] == elem && elemRel[1] == elemActual){
-                        encontrado = true;
-                    }
-                }
-                if (!encontrado){ // Si el primer elemento no se relaciona con el elemento actual que hemos encontrado
-                    return false; // Siguiendo una cadena de relaciones, no es transitiva y por lo tanto, tampoco un POSET
-                }
-                
-            }
-        }
-        
-        
-      return false; // TO DO
+      return true; // TO DO
     }
 
     /*
@@ -368,7 +363,7 @@ class Entrega {
      * Aquí teniu alguns exemples i proves relacionades amb aquests exercicis (vegeu `main`)
      */
     static void tests() {
-        System.out.println("TESTS TEMA 2");
+
       // Exercici 1
       // `p` és una partició d'`a`?
 
@@ -385,7 +380,7 @@ class Entrega {
               new int[][] { {1, 2}, {5}, {1, 4} }
           )
       );
-        System.out.println("EJERCICIO 1 TEMA 2");
+
       // Exercici 2
       // és `rel` definida sobre `a` d'ordre parcial i `x` n'és el mínim?
 
@@ -423,7 +418,7 @@ class Entrega {
               2
           )
       );
-        System.out.println("EJERCICIO 2 TEMA 2");
+
       // Exercici 3
       // calcular l'antiimatge de `y`
 
