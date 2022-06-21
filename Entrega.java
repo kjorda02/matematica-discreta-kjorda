@@ -754,7 +754,7 @@ class Entrega {
      *
      */
     static int exercici3(int n, int d) {
-      return -1; // TO DO
+      return (1-d*n)/(1-d); // TO DO
     }
 
     /*
