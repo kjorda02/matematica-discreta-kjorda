@@ -697,10 +697,82 @@ class Entrega {
      * Donada una matriu d'adjacencia `A` d'un graf connex no dirigit, digau si el graf conté algún cicle.
      */
     static boolean exercici4(int[][] A) {
-      int dimV = A.length;
-      int dimH = A[0].length;
+      int dim = A.length;
+      int[] recorrido = new int[dim]; // Aqui se guardara el numero de cada nodo que vayamos recorriendo
+      recorrido[0] = 0;
+      int indiceRecorrido = 0;
+      // Tambien consideramos que un nodo es una 'hoja' si ya sabemos que solo lleva a nodos hoja
+      boolean[] hoja = getHojas(A);
+      boolean ciclo = false, fin = false;
       
-      return false; // TO DO
+      while (!ciclo) {
+        //System.out.println("Indice actual:" + indiceRecorrido + "Nodo actual: " + recorrido[indiceRecorrido]);
+        boolean avanzado = siguienteNodo(recorrido, indiceRecorrido, A, hoja);
+        //System.out.println("Avanzado: " + avanzado);
+        if (!avanzado) {
+          if (indiceRecorrido == 0){
+            return false;
+          } else {
+            hoja[recorrido[indiceRecorrido]] = true; // Marcar el nodo actual como hoja
+            indiceRecorrido--; // Volver al nodo anterior
+          }
+        } else {
+          if (indiceRecorrido == (A.length - 1)) { // Si este era el ultimo nodo y ha encontrado un siguiente nodo
+            return true; // Solo puede significar que el ultimo nodo esta conectado con undo de los anterires
+          }
+          indiceRecorrido++;
+          
+          for (int i = 0; i < indiceRecorrido; i++) {
+            if (recorrido[i] == recorrido[indiceRecorrido]) {
+              ciclo = true; // Si encuentra un nodo por el que ya hemos pasado que sea igual al actual
+            }
+          }
+        }
+      }
+      return ciclo; // TO DO
+    }
+    
+    static boolean siguienteNodo(int[] recorrido, int indiceRecorrido, int[][] A, boolean[] hoja) {
+      int siguienteNodo = 0;
+      boolean encontrado = false;
+      
+      while ((siguienteNodo < A.length) && !encontrado) {
+        if (A[recorrido[indiceRecorrido]][siguienteNodo] == 1) { // Si encuentra una conexion a otro nodo
+          if (indiceRecorrido == 0 || siguienteNodo != recorrido[indiceRecorrido - 1]) { // Si ese nodo no es el anterior
+            if (hoja[siguienteNodo] == false) { // Si el nodo que hemos encontrado lleva a algun sitio
+              if (indiceRecorrido == (A.length - 1)) { // Si este es el ultimo nodo y ha encontrado un siguiente nodo
+                return true;
+              }
+              encontrado = true;
+              recorrido[indiceRecorrido + 1] = siguienteNodo;
+            }
+          }
+          
+        }
+        siguienteNodo++;
+      }
+      
+      return encontrado;
+    }
+    
+    static boolean[] getHojas(int[][] A) {
+      boolean[] hoja = new boolean[A.length];
+      
+      for (int i = 0; i < A.length; i++) { // Recorrer nodos
+        int grado = 0;
+        for (int j = 0; j < A.length; j++) { // Recorrer posibles arestas de ese nodo
+          if (A[i][j] == 1) { // Si hay una aresta con otro nodo (=1), sumarle uno al grado de ese nodo
+            grado++;
+          }
+        }
+        if (grado == 1) {
+          hoja[i] = true;
+        } else{
+          hoja[i] = false;
+        }
+      }
+      
+      return hoja;
     }
     /*
      * Aquí teniu alguns exemples i proves relacionades amb aquests exercicis (vegeu `main`)
