@@ -26,8 +26,8 @@ import java.util.Set;
  *
  * Podeu fer aquesta entrega en grups de com a màxim 3 persones, i necessitareu com a minim Java 8.
  * Per entregar, posau a continuació els vostres noms i entregau únicament aquest fitxer.
- * - Nom 1: Krishna Jorda Jimenez
- * - Nom 2:
+ * - Nom 1: Krishna Jorda Jimenez (G03)
+ * - Nom 2: XiaoZhe Cheng (G01)
  * - Nom 3:
  *
  * L'entrega es farà a través d'una tasca a l'Aula Digital abans de la data que se us hagui
@@ -587,10 +587,10 @@ class Entrega {
         b = a % b;
         a = aux;
       }
-      if (a % c == 0) {
+      if (c % a == 0) {
         return true;
       }
-      
+
       return false;
     }
 
@@ -673,7 +673,6 @@ class Entrega {
 
       }
       res[1] = res[1] / 2;
-      System.out.println(res[0] + " " + res[1]);
       return res; // TO DO
     }
 
@@ -888,19 +887,15 @@ class Entrega {
    * Podeu aprofitar el mètode `assertThat` per comprovar fàcilment que un valor sigui `true`.
    */
   public static void main(String[] args) {
-    //Tema1.tests();
-    //Tema2.tests();
-    //Tema3.tests();
+    Tema1.tests();
+    Tema2.tests();
+    Tema3.tests();
     Tema4.tests();
   }
 
   static void assertThat(boolean b) {
-    if (!b) {
-            System.out.println("ta mal");
-            //throw new AssertionError();
-        } else {
-            System.out.println("ta bien");
-        }
+    if (!b)
+      throw new AssertionError();
   }
 }
 
